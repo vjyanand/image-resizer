@@ -11,6 +11,8 @@ RUN sed -i 's/^\(bind .*\)$/# \1/' /etc/redis.conf && \
   sed -i 's/^\(dir .*\)$/# \1\ndir \/data/' /etc/redis.conf && \
   sed -i 's/^\(logfile .*\)$/# \1/' /etc/redis.conf
 
+CMD ["redis-server", "/etc/redis.conf"]
+
 WORKDIR /app
 
 RUN npm i
