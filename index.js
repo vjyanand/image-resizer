@@ -7,7 +7,7 @@ const helmet = require('helmet')
 
 const redis = require("redis");
 const rclient = redis.createClient({
-    host: '172.16.0.36',
+    host: 'localhost',
     password: 'tdfSr4sjd12@#12',
     port: 6379,
     return_buffers: true
