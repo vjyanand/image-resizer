@@ -1,6 +1,6 @@
 FROM alpine:latest as builder
 
-RUN apk add --no-cache ca-certificates memcached git make musl-dev nodejs npm make
+RUN apk add --no-cache ca-certificates memcached git make musl-dev nodejs npm make curl
 
 COPY . /app
 
