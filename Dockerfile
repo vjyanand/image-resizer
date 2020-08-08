@@ -9,4 +9,4 @@ WORKDIR /app
 
 RUN npm i
 
-CMD ["node", "index.js"]
+CMD ["node", "index_redis_less.js"]
