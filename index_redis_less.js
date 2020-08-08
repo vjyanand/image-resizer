@@ -4,8 +4,8 @@ const router = express.Router();
 const app = express()
 const port = process.env.PORT || 8080
 const helmet = require('helmet');
-const { request } = require('express');
-
+const fetch = require('node-fetch');
+const sharp = require('sharp');
 router.get('/img', async function (req, res, next) {
     if (!req.query.url) {
         return res.sendStatus(500)
@@ -24,26 +24,21 @@ router.get('/img', async function (req, res, next) {
     if (height && height > 600) {
         height = 320
     }
-    request.get(url, {
-        encoding: null
-    }, function (err, response, buffer) {
-        if (err) {
-            return res.status(500);
-        }
-        res.type('image/jpeg');
-        try {
+    fetch(url).then(res => res.buffer())
+        .then(buffer => {
             sharp(buffer).resize(width, height, {
                 withoutEnlargement: true,
                 kernel: sharp.kernel.lanczos3
             }).toBuffer(function (err, data, info) {
-                console.log(url)
+                if (err) {
+                    return res.status(500);
+                }
+                res.type('image/jpeg');
                 return res.send(data)
             });
-        } catch (e) {
-            res.sendStatus(500)
-            console.warn(e)
-        }
-    });
+        }).catch(err => {
+            return res.status(500);
+        })
 });
 
 app.use(helmet())
