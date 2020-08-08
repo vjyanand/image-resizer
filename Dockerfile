@@ -1,13 +1,10 @@
 FROM alpine:latest as builder
 
-RUN apk add --no-cache ca-certificates memcached git make musl-dev nodejs npm make curl
+RUN apk add --no-cache ca-certificates memcached git make musl-dev nodejs npm make curl pkgconfig gcc
 
 COPY . /app
 
 # Create and change to the app directory.
-WORKDIR /app
-
-RUN npm i
 
 RUN \
   cd /tmp && \
@@ -24,5 +21,9 @@ RUN \
   sed -i 's/^\(daemonize .*\)$/# \1/' /etc/redis/redis.conf && \
   sed -i 's/^\(dir .*\)$/# \1\ndir \/data/' /etc/redis/redis.conf && \
   sed -i 's/^\(logfile .*\)$/# \1/' /etc/redis/redis.conf
+
+WORKDIR /app
+
+RUN npm i
 
 CMD ["node", "index.js"]
