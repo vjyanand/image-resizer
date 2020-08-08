@@ -6,10 +6,10 @@ COPY . /app
 
 # Create and change to the app directory.
 
-RUN sed -i 's/^\(bind .*\)$/# \1/' /etc/redis/redis.conf && \
-  sed -i 's/^\(daemonize .*\)$/# \1/' /etc/redis/redis.conf && \
-  sed -i 's/^\(dir .*\)$/# \1\ndir \/data/' /etc/redis/redis.conf && \
-  sed -i 's/^\(logfile .*\)$/# \1/' /etc/redis/redis.conf
+RUN sed -i 's/^\(bind .*\)$/# \1/' /etc/redis.conf && \
+  sed -i 's/^\(daemonize .*\)$/# \1/' /etc/redis.conf && \
+  sed -i 's/^\(dir .*\)$/# \1\ndir \/data/' /etc/redis.conf && \
+  sed -i 's/^\(logfile .*\)$/# \1/' /etc/redis.conf
 
 WORKDIR /app
 
