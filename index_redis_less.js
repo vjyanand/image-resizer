@@ -24,7 +24,7 @@ router.get('/img', async function (req, res, next) {
     if (height && height > 600) {
         height = 320
     }
-    fetch(url).then(res => res.buffer())
+    fetch(url).then(ires => ires.buffer())
         .then(buffer => {
             sharp(buffer).resize(width, height, {
                 withoutEnlargement: true,
@@ -34,6 +34,7 @@ router.get('/img', async function (req, res, next) {
                     return res.status(500);
                 }
                 res.type('image/jpeg');
+                res.header('Cache-Control', 'public, max-age=604800, immutable')
                 return res.send(data)
             });
         }).catch(err => {
