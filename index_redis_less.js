@@ -7,10 +7,14 @@ const helmet = require('helmet');
 const fetch = require('node-fetch');
 const sharp = require('sharp');
 router.get('/img', async function (req, res, next) {
-    if (!req.query.url) {
+    const url = decodeURI(req.query.url);
+    if (!url) {
         return res.sendStatus(500)
     }
-    const url = decodeURI(req.query.url);
+    if (!url.startsWith("http")) {
+        return res.sendStatus(500)
+    }
+    
     let width = parseInt(req.query.w, 10);
     let height = parseInt(req.query.h, 10);
     height = isNaN(height) ? null : height;
