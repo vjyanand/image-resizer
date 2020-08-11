@@ -95,6 +95,7 @@ router.get('/feed', async function (req, res, next) {
         h: 'https://drudgenow.com/article/'
     }
     res.charset = "utf-8";
+    res.header('Cache-Control', 'public, max-age=300, immutable')
     return res.status(200).json(result);
 });
 
