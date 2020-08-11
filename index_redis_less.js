@@ -71,7 +71,7 @@ router.get('/feed', async function (req, res, next) {
     const client = await pool.connect()
     let feeds = []
     try {
-        let result = await client.query("SELECT row_number() OVER (PARTITION BY true) as id, url, img, title, date_part('epoch', ts)::int as ts, COALESCE(imgdimension, 1) as dim, source FROM feedview WHERE source = ANY($1::INT[]) ORDER BY ts DESC", [feedIds])
+        let result = await client.query("SELECT row_number() OVER (PARTITION BY true) as id, url, img, title, date_part('epoch', ts)::int as ts, COALESCE(imgdimension, 1) as dim, source FROM feedview WHERE source = ANY($1::INT[]) ORDER BY ts DESC", [filterIds])
         feeds = result.rows
       } catch (err) {
         console.log(err)
