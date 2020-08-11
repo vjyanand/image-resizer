@@ -26,7 +26,6 @@ const pool = new Pool({
     application_name: pg.name
 })
 
-
 router.get('/img', async function (req, res, next) {
     const url = decodeURI(req.query.url);
     if (!url) {
