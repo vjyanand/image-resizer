@@ -92,12 +92,17 @@ router.get('/favicon', async function (req, res, next) {
                 let icon = json.icons.shift();
                 let responseIcon = await fetch(icon.src);
                 let iconBuffer = await responseIcon.buffer();
-                let sp = sharp(iconBuffer).resize(16, 16, {withoutEnlargement: true,kernel: sharp.kernel.lanczos3}).png()
-                let spBuffer = await sp.toBuffer()
-                res.type('image/png');
-                res.header('Cache-Control', 'public, max-age=604800, immutable')
-                res.send(spBuffer)
-                return
+                try {
+                    let sp = sharp(iconBuffer).resize(16, 16, { withoutEnlargement: true, kernel: sharp.kernel.lanczos3 }).png()
+                    let spBuffer = await sp.toBuffer()
+                    res.type('image/png');
+                    res.header('Cache-Control', 'public, max-age=604800, immutable')
+                    res.send(spBuffer)
+                    return
+                } catch (err) {
+                    console.log(domain)
+                    console.log(err)
+                }
             }
         }
     }
