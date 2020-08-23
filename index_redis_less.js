@@ -73,8 +73,8 @@ router.get('/favicon', async function (req, res, next) {
         return res.sendStatus(500)
     }
     let fetchURL = "https://www.google.com/s2/favicons?sz=8&domain=" + domain
-    fetch(fetchURL).then(ires => ires.buffer()).then(buffer => {
-        res.set('Cache-control', 'public, max-age=30000').type('png').send(buffer)
+    fetch(fetchURL).then(res => {
+        res.set('Cache-control', 'public, max-age=30000').type('png').send(res.buffer())
     }).catch(err => {
         console.log("failed", err)
         return res.sendStatus(500)
