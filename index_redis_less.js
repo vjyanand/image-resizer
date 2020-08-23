@@ -67,6 +67,9 @@ router.get('/img', async function (req, res, next) {
 });
 
 router.get('/favicon', async function (req, res, next) {
+    if (!req.query.domain) {
+        return res.sendStatus(404)
+    }
     const domain = decodeURI(req.query.domain);
     if (!domain) {
         console.log("failed no domain")
@@ -76,7 +79,8 @@ router.get('/favicon', async function (req, res, next) {
     let response = await fetch(fetchURL);
     res.set('Cache-control', 'public, max-age=30000')
     res.set('content-type', response.headers.get('content-type'))
-    res.send(response.buffer())
+    let buffer = await response.buffer()
+    res.send(buffer)
 });
 
 router.get('/feed', async function (req, res, next) {
