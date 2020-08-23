@@ -73,12 +73,10 @@ router.get('/favicon', async function (req, res, next) {
         return res.sendStatus(500)
     }
     let fetchURL = "https://www.google.com/s2/favicons?sz=8&domain=" + domain
-    fetch(fetchURL).then(res => {
-        res.set('Cache-control', 'public, max-age=30000').type('png').send(res.buffer())
-    }).catch(err => {
-        console.log("failed", err)
-        return res.sendStatus(500)
-    })
+    let response = await fetch(fetchURL);
+    res.set('Cache-control', 'public, max-age=30000')
+    res.set('content-type', response.headers.get('content-type'))
+    res.send(response.buffer())
 });
 
 router.get('/feed', async function (req, res, next) {
