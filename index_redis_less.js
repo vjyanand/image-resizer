@@ -69,6 +69,7 @@ router.get('/img', async function (req, res, next) {
 router.get('/favicon', async function (req, res, next) {
     const domain = decodeURI(req.query.domain);
     if (!domain) {
+        console.log("failed no domain")
         return res.sendStatus(500)
     }
     let fetchURL = "https://www.google.com/s2/favicons?sz=8&domain=" + domain
@@ -76,6 +77,7 @@ router.get('/favicon', async function (req, res, next) {
         console.log(ires)
         res.type('png').send(buffer)
     }).catch(err => {
+        console.log("failed", err)
         return res.sendStatus(500)
     })
 });
