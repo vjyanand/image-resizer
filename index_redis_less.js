@@ -6,7 +6,8 @@ const port = process.env.PORT || 8080
 const helmet = require('helmet');
 const fetch = require('node-fetch');
 const sharp = require('sharp');
-const { Pool } = require('pg')
+const { Pool } = require('pg');
+const e = require('express');
 
 const pg = {
     user: 'news',
@@ -77,10 +78,30 @@ router.get('/favicon', async function (req, res, next) {
     }
     let fetchURL = "https://www.google.com/s2/favicons?sz=8&domain=" + domain
     let response = await fetch(fetchURL);
-    res.set('Cache-control', 'public, max-age=30000')
-    res.set('content-type', response.headers.get('content-type'))
-    let buffer = await response.buffer()
-    res.send(buffer)
+    if (response.ok) {
+        res.set('Cache-control', 'public, max-age=30000')
+        res.set('content-type', response.headers.get('content-type'))
+        let buffer = await response.buffer()
+        res.send(buffer)
+        return
+    } else {
+        let response = await fetch('https://favicongrabber.com/api/grab/' + domain)
+        if (response.ok) {
+            let json = await response.json();
+            if (json.icons) {
+                let icon = json.icons.shift();
+                let responseIcon = await fetch(icon.src);
+                let iconBuffer = await responseIcon.buffer();
+                let sp = sharp(iconBuffer).resize(16, 16, {withoutEnlargement: true,kernel: sharp.kernel.lanczos3}).png()
+                let spBuffer = await sp.toBuffer()
+                res.type('image/png');
+                res.header('Cache-Control', 'public, max-age=604800, immutable')
+                res.send(spBuffer)
+                return
+            }
+        }
+    }
+    return res.sendStatus(500)
 });
 
 router.get('/feed', async function (req, res, next) {
