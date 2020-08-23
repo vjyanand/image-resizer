@@ -67,7 +67,14 @@ router.get('/img', async function (req, res, next) {
 });
 
 router.get('/favicon', async function (req, res, next) {
-    return res.status(500);
+    const domain = decodeURI(req.query.domain);
+    if (!domain) {
+        return res.sendStatus(500)
+    }
+    let fetchURL = "https://www.google.com/s2/favicons?sz=8&domain=" + domain
+    fetch(url).then(ires => ires.buffer()).catch(err => {
+        return res.sendStatus(500)
+    })
 });
 
 router.get('/feed', async function (req, res, next) {
@@ -77,11 +84,11 @@ router.get('/feed', async function (req, res, next) {
     try {
         let result = await client.query("SELECT row_number() OVER (PARTITION BY true) as id, url, img, title, date_part('epoch', ts)::int as ts, COALESCE(imgdimension, 1) as dim, source FROM feedview WHERE source = ANY($1::INT[]) ORDER BY ts DESC", [filterIds])
         feeds = result.rows
-      } catch (err) {
+    } catch (err) {
         console.log(err)
-      } finally {
+    } finally {
         client.release();
-      }
+    }
     let uniqueUrls = []
     let uniqueFeeds = feeds.reduce(function (acc, feed) {
         if (uniqueUrls.includes(feed.url)) {
