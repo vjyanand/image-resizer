@@ -74,9 +74,9 @@ router.get('/favicon', async function (req, res, next) {
     let fetchURL = "https://www.google.com/s2/favicons?sz=8&domain=" + domain
     fetch(fetchURL).then(ires => ires.buffer()).then(buffer => { 
         console.log(ires)
-        res.send(buffer)
+        res.type('png').send(buffer)
     }).catch(err => {
-        return res.type('png').sendStatus(500)
+        return res.sendStatus(500)
     })
 });
 
