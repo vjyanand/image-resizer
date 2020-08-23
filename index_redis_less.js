@@ -66,6 +66,10 @@ router.get('/img', async function (req, res, next) {
         })
 });
 
+router.get('/favicon', async function (req, res, next) {
+    return res.status(500);
+});
+
 router.get('/feed', async function (req, res, next) {
     let filterIds = [20545835, 10774652, 457984599, 28614262, 19211550, 1367531, 14669951, 8007074, 1917731, 18856867, 39308549]
     const client = await pool.connect()
