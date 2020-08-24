@@ -54,11 +54,11 @@ router.get('/img', async function (req, res, next) {
             sharp(buffer).resize(width, height, {
                 withoutEnlargement: true,
                 kernel: sharp.kernel.lanczos3
-            }).webp().toBuffer(function (err, data, info) {
+            }).png().toBuffer(function (err, data, info) {
                 if (err) {
                     return res.status(500);
                 }
-                res.type('image/webp');
+                res.type('image/png');
                 res.header('Cache-Control', 'public, max-age=604800, immutable')
                 return res.send(data)
             });
