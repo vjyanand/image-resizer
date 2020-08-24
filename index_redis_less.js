@@ -7,7 +7,9 @@ const helmet = require('helmet');
 const fetch = require('node-fetch');
 const sharp = require('sharp');
 const { Pool } = require('pg');
-const e = require('express');
+const morgan = require('morgan')
+const fs = require('fs')
+const https = require('https')
 
 const pg = {
     user: 'news',
@@ -143,6 +145,16 @@ router.get('/feed', async function (req, res, next) {
 });
 
 app.use(helmet())
+app.use(morgan('combined'))
 app.use(router)
+
+const httpsOptions = {
+    key: fs.readFileSync('./server.key'),
+    cert: fs.readFileSync('./server.cert')
+}
+
+/* const server = https.createServer(httpsOptions, app).listen(port, () => {
+    console.log('server running at ' + port)
+}) */
 
 app.listen(port, () => console.log(`app listening on port ${port}!`))
