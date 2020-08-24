@@ -49,7 +49,7 @@ router.get('/img', async function (req, res, next) {
     if (height && height > 600) {
         height = 320
     }
-    fetch(url).then(ires => ires.buffer())
+    fetch(url, { timeout: 5000, headers: { "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.2 Safari/605.1.15", compress: true, } }).then(ires => ires.buffer())
         .then(buffer => {
             sharp(buffer).resize(width, height, {
                 withoutEnlargement: true,
