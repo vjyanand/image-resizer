@@ -6,10 +6,11 @@ const port = process.env.PORT || 8080
 const helmet = require('helmet');
 const fetch = require('node-fetch');
 const sharp = require('sharp');
-const { Pool } = require('pg');
+const {
+    Pool
+} = require('pg');
 const morgan = require('morgan')
 const fs = require('fs')
-const https = require('https')
 
 const pg = {
     user: 'news',
@@ -51,22 +52,33 @@ router.get('/img', async function (req, res, next) {
     if (height && height > 600) {
         height = 320
     }
-    fetch(url, { timeout: 5000, headers: { "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.2 Safari/605.1.15", compress: true, } }).then(ires => ires.buffer())
-        .then(buffer => {
-            sharp(buffer).resize(width, height, {
-                withoutEnlargement: true,
-                kernel: sharp.kernel.lanczos3
-            }).jpeg().toBuffer(function (err, data, info) {
-                if (err) {
-                    return res.status(500);
-                }
-                res.type('image/jpeg');
-                res.header('Cache-Control', 'public, max-age=604800, immutable')
-                return res.send(data)
-            });
-        }).catch(err => {
-            return res.status(500);
-        })
+    try {
+        const fetchResponse = await fetch(url, {
+            timeout: 5000,
+            headers: {
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.2 Safari/605.1.15",
+                compress: true,
+            }
+        });
+        if (!fetchResponse.ok) {
+            res.status(500).send("Failed to do fetch")
+            return
+        }
+        const transform = sharp().resize(width, height, {
+            withoutEnlargement: true,
+            kernel: sharp.kernel.lanczos3
+        }).jpeg()
+        await fetchResponse.body.pipe(transform).on('error', (e) => {
+            console.log(e)
+        }).pipe(res);
+        res.type('image/jpeg');
+        res.header('Cache-Control', 'public, max-age=604800, immutable')
+        return
+    } catch (err) {
+        console.log(err)
+        res.status(500).send("Failed to do transform")
+        return
+    }
 });
 
 router.get('/favicon', async function (req, res, next) {
@@ -93,14 +105,19 @@ router.get('/favicon', async function (req, res, next) {
             if (json.icons) {
                 let icon = json.icons.shift();
                 let responseIcon = await fetch(icon.src);
-                let iconBuffer = await responseIcon.buffer();
                 try {
-                    let sp = sharp(iconBuffer).resize(16, 16, { withoutEnlargement: true, kernel: sharp.kernel.lanczos3 }).png()
-                    let spBuffer = await sp.toBuffer()
-                    res.type('image/png');
-                    res.header('Cache-Control', 'public, max-age=604800, immutable')
-                    res.send(spBuffer)
-                    return
+                    if (responseIcon.ok) {
+                        const transform = sharp().resize(16, 16, {
+                            withoutEnlargement: true,
+                            kernel: sharp.kernel.lanczos3
+                        }).jpeg()
+                        await responseIcon.body.pipe(transform).on('error', (e) => {
+                            console.log(e)
+                        }).pipe(res);
+                        res.type('image/jpeg');
+                        res.header('Cache-Control', 'public, max-age=604800, immutable')
+                        return
+                    }
                 } catch (err) {
                     console.log(domain)
                     console.log(err)
@@ -147,14 +164,5 @@ router.get('/feed', async function (req, res, next) {
 app.use(helmet())
 app.use(morgan('combined'))
 app.use(router)
-
-const httpsOptions = {
-    key: fs.readFileSync('./server.key'),
-    cert: fs.readFileSync('./server.cert')
-}
-
-/* const server = https.createServer(httpsOptions, app).listen(port, () => {
-    console.log('server running at ' + port)
-}) */
 
 app.listen(port, () => console.log(`app listening on port ${port}!`))
