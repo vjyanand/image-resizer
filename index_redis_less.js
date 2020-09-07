@@ -74,7 +74,7 @@ router.get('/img', async function (req, res, next) {
                 return
             }
         }
-        console.log(width);
+        
         const transform = sharp().resize(width, height, {
             withoutEnlargement: true,
             kernel: sharp.kernel.lanczos3
