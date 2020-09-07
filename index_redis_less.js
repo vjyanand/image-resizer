@@ -39,8 +39,8 @@ router.get('/img', async function (req, res, next) {
         return res.sendStatus(500)
     }
 
-    let width = parseInt(req.query.w, 10);
-    let height = parseInt(req.query.h, 10);
+    let width = parseFloat(req.query.w, 10);
+    let height = parseFloat(req.query.h, 10);
     height = isNaN(height) ? null : height;
     width = isNaN(width) ? null : width;
     if (width === null && height === null) {
@@ -74,7 +74,7 @@ router.get('/img', async function (req, res, next) {
                 return
             }
         }
-
+        console.log(width);
         const transform = sharp().resize(width, height, {
             withoutEnlargement: true,
             kernel: sharp.kernel.lanczos3
