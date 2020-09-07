@@ -54,7 +54,7 @@ router.get('/img', async function (req, res, next) {
     }
     try {
         let eurl = encodeURI(url)
-        const fetchResponse = await fetch(eurl, {
+        let fetchResponse = await fetch(eurl, {
             timeout: 5000,
             headers: {
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.2 Safari/605.1.15",
@@ -62,9 +62,19 @@ router.get('/img', async function (req, res, next) {
             }
         });
         if (!fetchResponse.ok) {
-            res.status(500).send("Failed to do fetch")
-            return
+            fetchResponse = await fetch(url, {
+                timeout: 5000,
+                headers: {
+                    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.2 Safari/605.1.15",
+                    compress: true,
+                }
+            });
+            if (!fetchResponse.ok) {
+                res.status(500).send("Failed to do fetch")
+                return
+            }
         }
+
         const transform = sharp().resize(width, height, {
             withoutEnlargement: true,
             kernel: sharp.kernel.lanczos3
