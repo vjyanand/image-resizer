@@ -46,10 +46,10 @@ router.get('/img', async function (req, res, next) {
     if (width === null && height === null) {
         width = 320
     }
-    if (width && width > 600) {
+    if (width && width > 1600) {
         width = 320
     }
-    if (height && height > 600) {
+    if (height && height > 1600) {
         height = 320
     }
     try {
