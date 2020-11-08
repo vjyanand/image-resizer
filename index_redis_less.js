@@ -104,7 +104,7 @@ router.get('/favicon', async function (req, res, next) {
     let fetchURL = "https://www.google.com/s2/favicons?sz=8&domain=" + domain
     let response = await fetch(fetchURL);
     if (response.ok) {
-        res.set('Cache-control', 'public, max-age=30000')
+        res.header('Cache-Control', 'public, max-age=604800, immutable')
         res.set('content-type', response.headers.get('content-type'))
         let buffer = await response.buffer()
         res.send(buffer)
