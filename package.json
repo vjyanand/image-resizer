@@ -14,11 +14,11 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "helmet": "^4.1.1",
+    "helmet": "^4.2.0",
     "morgan": "^1.10.0",
     "node-fetch": "^2.6.1",
-    "pg": "^8.3.3",
+    "pg": "^8.5.0",
     "redis": "^3.0.2",
-    "sharp": "^0.26.1"
+    "sharp": "^0.26.2"
   }
 }
