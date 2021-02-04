@@ -1,1 +1,0 @@
-web: node index_redis_less

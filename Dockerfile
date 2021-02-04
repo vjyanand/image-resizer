@@ -1,12 +1,4 @@
-FROM alpine:latest as builder
+ARG IMGPROXY_TAG=latest
 
-RUN apk add --no-cache ca-certificates git musl-dev nodejs npm
-
-COPY . /app
-
-# Create and change to the app directory.
-WORKDIR /app
-
-RUN npm i
-
-CMD ["node", "index_redis_less.js"]
+FROM darthsim/imgproxy:$IMGPROXY_TAG
+LABEL maintainer="Sergey Alexandrovich <darthsim@gmail.com>"
