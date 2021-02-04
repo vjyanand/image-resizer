@@ -70,7 +70,7 @@ router.get('/img', async function (req, res, next) {
                 }
             });
             if (!fetchResponse.ok) {
-                res.status(500).send("Failed to do fetch" + fetchResponse.body)
+                res.status(500).send("Failed to do fetch" + fetchResponse.status)
                 return
             }
         }
