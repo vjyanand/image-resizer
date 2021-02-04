@@ -6,6 +6,8 @@ const port = process.env.PORT || 8080
 const helmet = require('helmet');
 const fetch = require('node-fetch');
 const sharp = require('sharp');
+const HttpsProxyAgent = require('https-proxy-agent');
+
 const {
     Pool
 } = require('pg');
@@ -64,6 +66,7 @@ router.get('/img', async function (req, res, next) {
         if (!fetchResponse.ok) {
             fetchResponse = await fetch(url, {
                 timeout: 5000,
+                agent:new HttpsProxyAgent('http://proxy.iavian.net:38080'),
                 headers: {
                     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.2 Safari/605.1.15",
                     compress: true,
