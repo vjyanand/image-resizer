@@ -69,7 +69,7 @@ router.get('/img', async function (req, res, next) {
                 timeout: 5000,
                 headers: {
                     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.2 Safari/605.1.15",
-                    compress: true,
+                    compress: false,
                 }
             });
             if (!fetchResponse.ok) {
