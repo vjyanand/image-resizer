@@ -4,7 +4,8 @@ const router = express.Router();
 const app = express()
 const port = process.env.PORT || 8080
 const helmet = require('helmet');
-const fetch = require('node-fetch');
+const Fetch = require('@adobe/helix-fetch');
+const fetch = Fetch.fetch;
 const sharp = require('sharp');
 const {
     Pool
@@ -60,8 +61,8 @@ router.get('/img', async function (req, res, next) {
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.2 Safari/605.1.15",
                 "Accept-Language": "en-us",
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-                compress: true,
-            }
+            },
+            compress: true,
         });
         if (!fetchResponse.ok) {
             let imgProxyurl = "https://images.weserv.nl/?url=" + encodeURI(url)
@@ -69,22 +70,24 @@ router.get('/img', async function (req, res, next) {
                 timeout: 5000,
                 headers: {
                     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.2 Safari/605.1.15",
-                    compress: false,
-                }
+                },
+                compress: false
             });
             if (!fetchResponse.ok) {
                 res.status(500).send("Failed to do fetch" + fetchResponse.body)
                 return
             }
         }
-        
+
         const transform = sharp().resize(width, height, {
             withoutEnlargement: true,
             kernel: sharp.kernel.lanczos3
         }).jpeg()
+
         await fetchResponse.body.pipe(transform).on('error', (e) => {
             console.log(e)
         }).pipe(res);
+
         res.type('image/jpeg');
         res.header('Cache-Control', 'public, max-age=604800, immutable')
         return

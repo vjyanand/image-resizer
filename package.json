@@ -13,12 +13,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@adobe/helix-fetch": "^2.1.7",
     "express": "^4.17.1",
-    "helmet": "^4.2.0",
+    "helmet": "^4.4.1",
     "morgan": "^1.10.0",
-    "node-fetch": "^2.6.1",
     "pg": "^8.5.1",
     "redis": "^3.0.2",
-    "sharp": "^0.26.2"
+    "sharp": "^0.27.2"
   }
 }
