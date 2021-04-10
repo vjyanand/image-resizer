@@ -8,17 +8,17 @@
     "start": "node index_redis_less"
   },
   "engines": {
-    "node": "12.x"
+    "node": "15.x"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@adobe/helix-fetch": "^2.1.7",
+    "@adobe/helix-fetch": "^2.2.0",
     "express": "^4.17.1",
     "helmet": "^4.4.1",
     "morgan": "^1.10.0",
     "pg": "^8.5.1",
-    "redis": "^3.0.2",
-    "sharp": "^0.27.2"
+    "redis": "^3.1.0",
+    "sharp": "^0.28.1"
   }
 }
