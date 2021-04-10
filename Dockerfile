@@ -1,4 +1,4 @@
-FROM node:current-slim as builder
+FROM alpine:latest as builder
 
 RUN apk add --no-cache ca-certificates git musl-dev nodejs npm
 
