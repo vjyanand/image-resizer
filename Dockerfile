@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:17 as builder
+FROM node:current-alpine3.14 as builder
 
 RUN apk add --no-cache ca-certificates git
 
