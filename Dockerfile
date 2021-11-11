@@ -1,6 +1,6 @@
-FROM alpine:latest as builder
+FROM mhart/alpine-node:17 as builder
 
-RUN apk add --no-cache ca-certificates git musl-dev nodejs npm
+RUN apk add --no-cache ca-certificates git
 
 COPY . /app
 

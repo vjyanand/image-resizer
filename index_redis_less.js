@@ -78,19 +78,15 @@ router.get('/img', async function (req, res, next) {
                 return
             }
         }
-
         const transform = sharp().resize(width, height, {
-            withoutEnlargement: true,
+            withoutEnlargement: false,
             kernel: sharp.kernel.lanczos3
         }).jpeg()
-
-        await fetchResponse.body.pipe(transform).on('error', (e) => {
-            console.log(e)
-        }).pipe(res);
-
         res.type('image/jpeg');
         res.header('Cache-Control', 'public, max-age=604800, immutable')
-        return
+        fetchResponse.body.pipe(transform).on('error', (e) => {
+            console.log(e)
+        }).pipe(res);
     } catch (err) {
         console.log(err)
         res.status(500).send("Failed to do transform")
