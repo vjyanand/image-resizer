@@ -1,4 +1,4 @@
 # image-resizer
 
-## Resize image 
-## Fetch ico for a domain
+###### Resize image 
+###### Fetch ico for a domain
