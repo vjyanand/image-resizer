@@ -1,12 +1,26 @@
-FROM node:current-alpine3.14 as builder
+FROM node:current-alpine3.15 as builder
 
 RUN apk add --no-cache ca-certificates git
 
-COPY . /app
+# Show all node logs
+ENV NPM_CONFIG_LOGLEVEL warn
 
-# Create and change to the app directory.
-WORKDIR /app
+# Create app directory
+RUN mkdir -p /opt/app
 
-RUN npm i
+# Set Working Directory
+WORKDIR /opt/app/
+
+# Copy only package.json and yarn.lock for cache
+COPY package.json ./
+
+# Add libvips
+RUN apk add --upgrade --no-cache vips-dev build-base --repository https://alpine.global.ssl.fastly.net/alpine/v3.15/community/
+
+# Install Dependncies
+RUN yarn install --production --ignore-optional --pure-lockfile --non-interactive
+
+# Copy Files
+COPY . ./
 
 CMD ["node", "index.js"]
