@@ -93,7 +93,7 @@ router.get('/favicon', async function (req, res, next) {
         let response = await fetch('https://favicongrabber.com/api/grab/' + domain)
         if (response.ok) {
             let json = await response.json();
-            if (json.icons) {
+            if (json.icons && json.icons.length > 0) {
                 let icon = json.icons.shift();
                 let responseIcon = await fetch(icon.src);
                 try {
