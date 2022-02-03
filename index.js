@@ -18,20 +18,20 @@ router.get('/img', async function (req, res, next) {
         return res.sendStatus(500)
     }
 
-    let width = parseFloat(req.query.w, 10);
-    let height = parseFloat(req.query.h, 10);
-    height = isNaN(height) ? null : height;
-    width = isNaN(width) ? null : width;
-    if (width === null && height === null) {
-        width = 320
-    }
-    if (width && width > 1600) {
-        width = 320
-    }
-    if (height && height > 1600) {
-        height = 320
-    }
     try {
+        let width = parseFloat(req.query.w, 10);
+        let height = parseFloat(req.query.h, 10);
+        height = isNaN(height) ? null : height;
+        width = isNaN(width) ? null : width;
+        if (width === null && height === null) {
+            width = 320
+        }
+        if (width && width > 1600) {
+            width = 320
+        }
+        if (height && height > 1600) {
+            height = 320
+        }
         let eurl = encodeURI(url)
         let fetchResponse = await fetch(eurl, {
             timeout: 5000,
