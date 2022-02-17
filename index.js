@@ -86,6 +86,7 @@ router.get('/favicon', async function (req, res, next) {
     if (response.ok) {
         res.set('content-type', response.headers.get('content-type'))
         res.header('Cache-Control', 'public, max-age=604800, immutable')
+        res.header('Cross-Origin-Resource-Policy', 'same-site')
         let buffer = await response.buffer()
         res.send(buffer)
         return
