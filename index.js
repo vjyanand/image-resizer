@@ -108,6 +108,7 @@ router.get('/favicon', async function (req, res, next) {
                         }).pipe(res);
                         res.type('image/jpeg');
                         res.header('Cache-Control', 'public, max-age=604800, immutable')
+                        res.header('Cross-Origin-Resource-Policy', 'same-site')
                         return
                     }
                 } catch (err) {
