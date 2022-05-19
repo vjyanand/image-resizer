@@ -87,6 +87,7 @@ router.get('/favicon', async function (req, res, next) {
         res.set('content-type', response.headers.get('content-type'))
         res.header('Cache-Control', 'public, max-age=604800, immutable')
         res.header('Cross-Origin-Resource-Policy', 'same-site')
+        res.header('Access-Control-Allow-Origin', '*')
         let buffer = await response.buffer()
         res.send(buffer)
         return
@@ -103,12 +104,13 @@ router.get('/favicon', async function (req, res, next) {
                             withoutEnlargement: true,
                             kernel: sharp.kernel.lanczos3
                         }).jpeg()
-                        await responseIcon.body.pipe(transform).on('error', (e) => {
+                        responseIcon.body.pipe(transform).on('error', (e) => {
                             console.log(e)
                         }).pipe(res);
                         res.type('image/jpeg');
                         res.header('Cache-Control', 'public, max-age=604800, immutable')
                         res.header('Cross-Origin-Resource-Policy', 'same-site')
+                        res.header('Access-Control-Allow-Origin', '*')
                         return
                     }
                 } catch (err) {
@@ -118,6 +120,9 @@ router.get('/favicon', async function (req, res, next) {
             }
         }
     }
+    res.header('Cache-Control', 'public, max-age=604800, immutable')
+    res.header('Cross-Origin-Resource-Policy', 'same-site')
+    res.header('Access-Control-Allow-Origin', '*')
     return res.sendStatus(500)
 });
 
