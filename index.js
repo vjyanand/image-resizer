@@ -1,13 +1,13 @@
 'use strict';
-const express = require('express');
+import express from 'express';
+import sharp from 'sharp';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import fetch from 'node-fetch';
+
 const router = express.Router();
 const app = express()
-const port = process.env.PORT || 8080
-const helmet = require('helmet');
-const Fetch = require('@adobe/helix-fetch');
-const fetch = Fetch.fetch;
-const sharp = require('sharp');
-const morgan = require('morgan')
+const port = process.env.PORT || 9090
 
 router.get('/img', async function (req, res, next) {
     const url = decodeURI(req.query.url);
