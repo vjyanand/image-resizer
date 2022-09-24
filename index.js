@@ -9,6 +9,41 @@ const router = express.Router();
 const app = express()
 const port = process.env.PORT || 9090
 
+router.get('/proxy', async function (req, res, next) {
+    const url = decodeURI(req.query.url);
+    if (!url) {
+        return res.sendStatus(500)
+    }
+    if (!url.startsWith("http")) {
+        return res.sendStatus(500)
+    }
+    let fetchResponse = await fetch(url, {
+        timeout: 5000,
+        headers: {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.2 Safari/605.1.15",
+            "Accept-Language": "en-us",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        },
+        compress: true,
+    });
+    if (!fetchResponse.ok) {
+        res.status(500).send("Failed to do fetch" + fetchResponse.body)
+        return
+    }
+    for (const header_keys of fetchResponse.headers.keys()) {
+        res.header(header_keys, fetchResponse.headers.get(header_keys))
+    }
+    res.removeHeader('content-encoding')
+    
+    fetchResponse.body.on('error', (e) => {
+        res.status(500).send("Failed to do fetch")
+        console.log(e)
+        return
+    }).pipe(res);
+
+});
+
+
 router.get('/img', async function (req, res, next) {
     const url = decodeURI(req.query.url);
     if (!url) {
@@ -88,7 +123,7 @@ router.get('/favicon', async function (req, res, next) {
         res.header('Cache-Control', 'public, max-age=604800, immutable')
         res.header('Cross-Origin-Resource-Policy', 'same-site')
         res.header('Access-Control-Allow-Origin', '*')
-        let buffer = await response.buffer()
+        let buffer = await response.arrayBuffer()
         res.send(buffer)
         return
     } else {
