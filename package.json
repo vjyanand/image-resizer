@@ -14,10 +14,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@adobe/fetch": "^3.1.2",
     "express": "^4.18.2",
     "helmet": "^6.0.0",
     "morgan": "^1.10.0",
+    "node-fetch": "^3.3.0",
     "sharp": "^0.31.2"
   }
 }
