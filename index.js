@@ -37,7 +37,7 @@ router.get('/proxy', async function (req, res, next) {
         res.header(header_keys, fetchResponse.headers.get(header_keys))
     }
     res.removeHeader('content-encoding')
-    
+
     fetchResponse.body.on('error', (e) => {
         res.status(500).send("Failed to do fetch")
         console.log(e)
