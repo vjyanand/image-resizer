@@ -119,44 +119,16 @@ router.get('/favicon', async function (req, res, next) {
         console.log("failed no domain")
         return res.sendStatus(500)
     }
-    let fetchURL = "https://www.google.com/s2/favicons?sz=8&domain=" + domain
+    let fetchURL = "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&size=12&fallback_opts=TYPE,SIZE,URL&url=http://" + domain
     let response = await fetch(fetchURL);
     if (response.ok) {
-        res.set('content-type', response.headers.get('content-type'))
+        res.setHeader('content-type', response.headers.get('content-type'))
         res.header('Cache-Control', 'public, max-age=604800, immutable')
         res.header('Cross-Origin-Resource-Policy', 'same-site')
         res.header('Access-Control-Allow-Origin', '*')
         let buffer = await response.buffer()
         res.send(buffer)
         return
-    } else {
-        let response = await fetch('https://favicongrabber.com/api/grab/' + domain)
-        if (response.ok) {
-            let json = await response.json();
-            if (json.icons && json.icons.length > 0) {
-                let icon = json.icons.shift();
-                let responseIcon = await fetch(icon.src);
-                try {
-                    if (responseIcon.ok) {
-                        const transform = sharp().resize(16, 16, {
-                            withoutEnlargement: true,
-                            kernel: sharp.kernel.lanczos3
-                        }).jpeg()
-                        responseIcon.body.pipe(transform).on('error', (e) => {
-                            console.log(e)
-                        }).pipe(res);
-                        res.type('image/jpeg');
-                        res.header('Cache-Control', 'public, max-age=604800, immutable')
-                        res.header('Cross-Origin-Resource-Policy', 'same-site')
-                        res.header('Access-Control-Allow-Origin', '*')
-                        return
-                    }
-                } catch (err) {
-                    console.log(domain)
-                    console.log(err)
-                }
-            }
-        }
     }
     res.header('Cache-Control', 'public, max-age=604800, immutable')
     res.header('Cross-Origin-Resource-Policy', 'same-site')
